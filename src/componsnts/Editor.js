@@ -30,13 +30,17 @@ body {
 </body>
 </html>
 `;
+const themeOptions = ["monokai", "github"];
 
 const Editor = () => {
   const editorRef = useRef();
   const iframeRef = useRef();
+
   const [theme, setTheme] = useState("monokai");
   const [text, setText] = useState(initialValue);
+  const [isDirty, setIsDirty] = useState(false);
 
+  //configure Editor
   useEffect(() => {
     var temp = ace.edit(editorRef.current);
     temp.session.setMode("ace/mode/html");
@@ -44,16 +48,39 @@ const Editor = () => {
     temp.session.setValue(text);
     temp.setHighlightActiveLine(true);
 
-    //setupEvents
-  }, [text]);
-  const themeOptions = ["monokai", "github"];
+    //setUp setupEvents
+    temp.on("change", (e) => {
+      if (!isDirty) {
+        setIsDirty(true);
+      }
+    });
+
+    return () => {
+      temp.off("change");
+    };
+  }, [isDirty, text]);
 
   useEffect(() => {
     var temp = ace.edit(editorRef.current);
     temp.setTheme(`ace/theme/${theme}`);
   }, [theme]);
 
-  //   useEffect(() => {}, [theme]);
+  //use ctrl/cmd + s to save the code
+  useEffect(() => {
+    document.addEventListener("keydown", function (event) {
+      var S = 83;
+
+      if (
+        (event.key === S || event.keyCode === S) &&
+        (event.metaKey || event.ctrlKey)
+      ) {
+        event.preventDefault();
+        execute();
+      }
+    });
+
+    // if ((event.key === S || event.keyCode === S) && (event.metaKey || event.ctrlKey) && activeElement.nodeName === 'TEXTAREA') {
+  }, []);
   const execute = () => {
     var temp = ace.edit(editorRef.current);
     setText(temp.getValue());
@@ -74,7 +101,7 @@ const Editor = () => {
 
   return (
     <>
-      <div className="options">
+      <div className={`options ${theme === "github" ? "light" : "dark"}`}>
         <div>
           <Counter onChange={changeFontSize} />{" "}
           <select
@@ -89,7 +116,9 @@ const Editor = () => {
           </select>
         </div>
         <div className="btn-grp">
-          <button onClick={execute}>Execute</button>
+          <button disabled={isDirty} onClick={execute}>
+            Execute
+          </button>
           <button onClick={downloadTxt}>Download</button>
         </div>
       </div>

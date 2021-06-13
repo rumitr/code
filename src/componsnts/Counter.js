@@ -12,11 +12,17 @@ const Counter = ({ onChange, skip = 1, initial = 12 }) => {
 
   return (
     <>
-      <button disabled={counter <= 0} onClick={() => handleChange("subtract")}>
+      <button
+        className="operator"
+        disabled={counter <= 0}
+        onClick={() => handleChange("subtract")}
+      >
         -
       </button>
       <span> {counter} px </span>
-      <button onClick={() => handleChange("add")}>+</button>
+      <button className="operator" onClick={() => handleChange("add")}>
+        +
+      </button>
     </>
   );
 };
