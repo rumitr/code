@@ -83,9 +83,9 @@ const Editor = () => {
             name=""
             id=""
           >
-            {themeOptions.map((option) => {
-              return <option key={option}>{option}</option>;
-            })}
+            {themeOptions.map((option) => (
+              <option key={option}>{option}</option>
+            ))}
           </select>
         </div>
         <div className="btn-grp">
