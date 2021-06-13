@@ -3,7 +3,7 @@ import ace from "ace-builds";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-noconflict/mode-html";
-import "ace-builds/src-noconflict/worker-html";
+
 import { download } from "../lib";
 import Counter from "./Counter";
 
