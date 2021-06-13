@@ -1,3 +1,11 @@
+// Code can be used as PWA
+// Further actions
+// seperate the editor into html, css and javascript
+// improve css
+// add other themes and languages maybe use web components to compile theme
+// you can find the file hosted on https://code.rumit.tech
+// source code can be found on https://github.com/rumitr/code
+
 import React, { useRef, useEffect, useState } from "react";
 import ace from "ace-builds";
 import "ace-builds/src-noconflict/theme-monokai";
@@ -7,6 +15,7 @@ import "ace-builds/src-noconflict/mode-html";
 import { download } from "../lib";
 import Counter from "./Counter";
 
+//taken from w3school
 const initialValue = `<!DOCTYPE html>
 <html>
 <head>
@@ -25,7 +34,6 @@ body {
 <h1>This is a Heading</h1>
 <p>This is a paragraph.</p>
 <p>Edit the code in the window to the lef and click "Run" to view the result.</p>
-<img src="avatar.png" alt="Avatar" style="width:200px">
 
 </body>
 </html>
@@ -60,6 +68,7 @@ const Editor = () => {
     };
   }, [isDirty, text]);
 
+  //setTheme of the editor
   useEffect(() => {
     var temp = ace.edit(editorRef.current);
     temp.setTheme(`ace/theme/${theme}`);
@@ -69,7 +78,6 @@ const Editor = () => {
   useEffect(() => {
     document.addEventListener("keydown", function (event) {
       var S = 83;
-
       if (
         (event.key === S || event.keyCode === S) &&
         (event.metaKey || event.ctrlKey)
@@ -78,18 +86,18 @@ const Editor = () => {
         execute();
       }
     });
-
-    // if ((event.key === S || event.keyCode === S) && (event.metaKey || event.ctrlKey) && activeElement.nodeName === 'TEXTAREA') {
   }, []);
+
   const execute = () => {
-    var temp = ace.edit(editorRef.current);
-    setText(temp.getValue());
+    const temp = ace.edit(editorRef.current);
+    const text = temp.getValue();
+    setText(text);
+    setIsDirty(false);
+    return text;
   };
 
   const downloadTxt = () => {
-    var temp = ace.edit(editorRef.current);
-
-    const text = temp.getValue();
+    const text = execute();
     setText(text);
     download("code", text);
   };
@@ -116,7 +124,7 @@ const Editor = () => {
           </select>
         </div>
         <div className="btn-grp">
-          <button disabled={isDirty} onClick={execute}>
+          <button disabled={!isDirty} onClick={execute}>
             Execute
           </button>
           <button onClick={downloadTxt}>Download</button>
